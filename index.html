@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>WCAG - Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style type="text/css">
+	*{
+		margin: 0;
+		padding: 0;
+		text-align: center;
+		font-family: 'Josefin Sans', sans-serif;
+	}
+	.parrent_div{
+		width: 100vw;
+		height: 100vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+	.child_div, #missed_sc{
+		width: 40rem;
+		height: auto;
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+		background: #d3e9fa;
+        padding-left: 15px;
+	}
+
+	h1{
+		margin-top: 25px;
+	}
+
+	p{
+		font-size: 21px;
+		margin: 20px 0;
+	}
+
+	button{
+		margin: 15px 0;
+	}
+
+	#demo2, #wrong_ans{
+		color: red;
+	}
+
+	#demo3, #right_ans{
+		color: green;
+	}
+
+	#result{
+		display: flex;
+    justify-content: end;
+    align-items: center;
+    margin-right: 1rem;
+    margin-top: 1rem;
+	}
+
+	#result div{
+		    border: 1px solid black;
+		    padding: 5px;
+    		border-radius: 50px;
+    		margin: 0 4px;
+    		width: 4rem;
+    		background: white;
+            font-size: 13px;
+	}
+
+	button{
+		padding: 10px 20px;
+	}
+
+    button:disabled,
+    button[disabled]{
+        border: 1px solid #999999;
+        background-color: #cccccc;
+        color: #666666;
+        cursor: not-allowed;
+    }
+
+	input{
+		width: 28rem;
+		font-size: 18px;
+		height: 25px;
+		text-align: start;
+		padding-left: 10px;
+	}
+
+	#missed_sc{
+        padding: 15px 35px;
+	}
+
+	p{
+		margin-bottom: 13px;
+		font-size: 20px;
+		font-weight: bold;
+	}
+
+    ol li{
+        text-align: start;
+        line-height: 25px;
+    }
+
+    .principle_radio_btn{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 25px;
+    }
+    select{
+        padding: 10px;
+    }
+    select option{
+        font-size: 15px;
+        text-align: start;
+    }
+</style>
+</head>
+<body>
+<main>
+	<div class="parrent_div">
+		<div class="child_div">
+			<h1>WCAG Success Criteria Quiz</h1>
+			<div id="result">
+				<div id="right_ans">Right 0</div>
+				<div id="wrong_ans">Wrong 0</div>
+			</div>
+			<div>
+				
+                <div class="principle_radio_btn">
+                    <select name="guideline_name" id="guideline">
+                      <option value="Text_alternative">1.1 Text alternative</option>
+                      <option value="Time_based_Media">1.2 Time-based Media</option>
+                      <option value="Adaptable">1.3 Adaptable</option>
+                      <option value="Distinguishable">1.4 Distinguishable</option>
+                      <option value="Keyboard_Accessible">2.1 Keyboard Accessible</option>
+                      <option value="Enough_Time">2.2 Enough Time</option>
+                      <option value="Seizures"> 2.3 Seizures</option>
+                      <option value="Navigable">2.4 Navigable</option>
+                      <option value="Input_Modalities">2.5 Input Modalities</option>
+                      <option value="Readable">3.1 Readable</option>
+                      <option value="Predictable">3.2 Predictable</option>
+                      <option value="Input_Assistance">3.3 Input Assistance</option>
+                      <option value="Compatible">4.1 Compatible</option>
+                    </select>
+                </div>
+
+                <p id="demo1"></p>
+
+				<button id="rg_button" onclick="selectUniqueSubject()">Start Quiz</button>
+			</div>
+			<div id="input_div">
+			    <input type="text" id="ans_input" placeholder="Enter you expected guideline as per above number" aria-lable="Enter you expected guideline as per above number" required><br />
+			    <button type="submit" id="submit_btn" onclick="checkAwnser(); displayMissedSC();">Submit</button>
+			</div>
+			<div>
+				<p id="demo2"></p>
+				<p id="demo3"></p>
+			</div>
+		</div>
+		<div id="missed_sc">
+				<p>Missed Success Criteria</p>
+				<ol id="list_missed_sc">
+
+				</ol>
+		</div>
+	</div>
+</main>
+
+<script>
+
+    var Text_alternative = [
+            'Success Criterion 1.1.1 Non-text Content'
+                    ]
+
+    var Time_based_Media = [
+            'Success Criterion 1.2.1 Audio-only and Video-only (Prerecorded)',
+            'Success Criterion 1.2.2 Captions (Prerecorded)',
+            'Success Criterion 1.2.3 Audio Description or Media Alternative (Prerecorded)',
+            'Success Criterion 1.2.4 Captions (Live)',
+            'Success Criterion 1.2.5 Audio Description (Prerecorded)',
+            'Success Criterion 1.2.6 Sign Language (Prerecorded)',
+            'Success Criterion 1.2.7 Extended Audio Description (Prerecorded)',
+            'Success Criterion 1.2.8 Media Alternative (Prerecorded)',
+            'Success Criterion 1.2.9 Audio-only (Live)'
+        ]
+
+    var Adaptable = [
+            'Success Criterion 1.3.1 Info and Relationships',
+            'Success Criterion 1.3.2 Meaningful Sequence',
+            'Success Criterion 1.3.3 Sensory Characteristics',
+            'Success Criterion 1.3.4 Orientation',
+            'Success Criterion 1.3.5 Identify Input Purpose',
+            'Success Criterion 1.3.6 Identify Purpose'
+        ]
+
+    var Distinguishable = [
+            'Success Criterion 1.4.1 Use of Color',
+            'Success Criterion 1.4.2 Audio Control',
+            'Success Criterion 1.4.3 Contrast (Minimum)',
+            'Success Criterion 1.4.4 Resize text',
+            'Success Criterion 1.4.5 Images of Text',
+            'Success Criterion 1.4.6 Contrast (Enhanced)',
+            'Success Criterion 1.4.7 Low or No Background Audio',
+            'Success Criterion 1.4.8 Visual Presentation',
+            'Success Criterion 1.4.9 Images of Text (No Exception)',
+            'Success Criterion 1.4.10 Reflow',
+            'Success Criterion 1.4.11 Non-text Contrast',
+            'Success Criterion 1.4.12 Text Spacing',
+            'Success Criterion 1.4.13 Content on Hover or Focus'
+        ]
+
+    var Keyboard_Accessible = [
+            'Success Criterion 2.1.1 Keyboard',
+            'Success Criterion 2.1.2 No Keyboard Trap',
+            'Success Criterion 2.1.3 Keyboard (No Exception)',
+            'Success Criterion 2.1.4 Character Key Shortcuts'
+        ]
+
+    var Enough_Time = [
+            'Success Criterion 2.2.1 Timing Adjustable',
+            'Success Criterion 2.2.2 Pause, Stop, Hide',
+            'Success Criterion 2.2.3 No Timing',
+            'Success Criterion 2.2.4 Interruptions',
+            'Success Criterion 2.2.5 Re-authenticating',
+            'Success Criterion 2.2.6 Timeouts'
+        ]
+
+    var Seizures = [
+            'Success Criterion 2.3.1 Three Flashes or Below Threshold',
+            'Success Criterion 2.3.2 Three Flashes',
+            'Success Criterion 2.3.3 Animation from Interactions'            
+        ]
+
+    var Navigable = [
+            'Success Criterion 2.4.1 Bypass Blocks',
+            'Success Criterion 2.4.2 Page Titled',
+            'Success Criterion 2.4.3 Focus Order',
+            'Success Criterion 2.4.4 Link Purpose (In Context)',
+            'Success Criterion 2.4.5 Multiple Ways',
+            'Success Criterion 2.4.6 Headings and Labels',
+            'Success Criterion 2.4.7 Focus Visible',
+            'Success Criterion 2.4.8 Location',
+            'Success Criterion 2.4.9 Link Purpose (Link Only)',
+            'Success Criterion 2.4.10 Section Headings'
+        ]
+
+    var Input_Modalities = [
+            'Success Criterion 2.5.1 Pointer Gestures',
+            'Success Criterion 2.5.2 Pointer Cancellation',
+            'Success Criterion 2.5.3 Label in Name',
+            'Success Criterion 2.5.4 Motion Actuation',
+            'Success Criterion 2.5.5 Target Size',
+            'Success Criterion 2.5.6 Concurrent Input Mechanisms'            
+        ]
+
+    var Readable = [
+            'Success Criterion 3.1.1 Language of Page',
+            'Success Criterion 3.1.2 Language of Parts',
+            'Success Criterion 3.1.3 Unusual Words',
+            'Success Criterion 3.1.4 Abbreviations',
+            'Success Criterion 3.1.5 Reading Level',
+            'Success Criterion 3.1.6 Pronunciation' 
+        ]
+
+    var Predictable = [
+            'Success Criterion 3.2.1 On Focus',
+            'Success Criterion 3.2.2 On Input',
+            'Success Criterion 3.2.3 Consistent Navigation',
+            'Success Criterion 3.2.4 Consistent Identification',
+            'Success Criterion 3.2.5 Change on Request'            
+        ]
+
+    var Input_Assistance = [
+            'Success Criterion 3.3.1 Error Identification',
+            'Success Criterion 3.3.2 Labels or Instructions',
+            'Success Criterion 3.3.3 Error Suggestion',
+            'Success Criterion 3.3.4 Error Prevention (Legal, Financial, Data)',
+            'Success Criterion 3.3.5 Help',
+            'Success Criterion 3.3.6 Error Prevention (All)'            
+        ]
+
+    var Compatible = [
+            'Success Criterion 4.1.1 Parsing',
+            'Success Criterion 4.1.2 Name, Role, Value',
+            'Success Criterion 4.1.3 Status Messages'
+        ]
+
+
+    var All = [
+                'Success Criterion 1.1.1 Non-text Content',
+                'Success Criterion 1.2.1 Audio-only and Video-only (Prerecorded)',
+                'Success Criterion 1.2.2 Captions (Prerecorded)',
+                'Success Criterion 1.2.3 Audio Description or Media Alternative (Prerecorded)',
+                'Success Criterion 1.2.4 Captions (Live)',
+                'Success Criterion 1.2.5 Audio Description (Prerecorded)',
+                'Success Criterion 1.2.6 Sign Language (Prerecorded)',
+                'Success Criterion 1.2.7 Extended Audio Description (Prerecorded)',
+                'Success Criterion 1.2.8 Media Alternative (Prerecorded)',
+                'Success Criterion 1.2.9 Audio-only (Live)',
+                'Success Criterion 1.3.1 Info and Relationships',
+                'Success Criterion 1.3.2 Meaningful Sequence',
+                'Success Criterion 1.3.3 Sensory Characteristics',
+                'Success Criterion 1.3.4 Orientation',
+                'Success Criterion 1.3.5 Identify Input Purpose',
+                'Success Criterion 1.3.6 Identify Purpose',
+                'Success Criterion 1.4.1 Use of Color',
+                'Success Criterion 1.4.2 Audio Control',
+                'Success Criterion 1.4.3 Contrast (Minimum)',
+                'Success Criterion 1.4.4 Resize text',
+                'Success Criterion 1.4.5 Images of Text',
+                'Success Criterion 1.4.6 Contrast (Enhanced)',
+                'Success Criterion 1.4.7 Low or No Background Audio',
+                'Success Criterion 1.4.8 Visual Presentation',
+                'Success Criterion 1.4.9 Images of Text (No Exception)',
+                'Success Criterion 1.4.10 Reflow',
+                'Success Criterion 1.4.11 Non-text Contrast',
+                'Success Criterion 1.4.12 Text Spacing',
+                'Success Criterion 1.4.13 Content on Hover or Focus',
+                'Success Criterion 2.1.1 Keyboard',
+                'Success Criterion 2.1.2 No Keyboard Trap',
+                'Success Criterion 2.1.3 Keyboard (No Exception)',
+                'Success Criterion 2.1.4 Character Key Shortcuts',
+                'Success Criterion 2.2.1 Timing Adjustable',
+                'Success Criterion 2.2.2 Pause, Stop, Hide',
+                'Success Criterion 2.2.3 No Timing',
+                'Success Criterion 2.2.4 Interruptions',
+                'Success Criterion 2.2.5 Re-authenticating',
+                'Success Criterion 2.2.6 Timeouts',
+                'Success Criterion 2.3.1 Three Flashes or Below Threshold',
+                'Success Criterion 2.3.2 Three Flashes',
+                'Success Criterion 2.3.3 Animation from Interactions',
+                'Success Criterion 2.4.1 Bypass Blocks',
+                'Success Criterion 2.4.2 Page Titled',
+                'Success Criterion 2.4.3 Focus Order',
+                'Success Criterion 2.4.4 Link Purpose (In Context)',
+                'Success Criterion 2.4.5 Multiple Ways',
+                'Success Criterion 2.4.6 Headings and Labels',
+                'Success Criterion 2.4.7 Focus Visible',
+                'Success Criterion 2.4.8 Location',
+                'Success Criterion 2.4.9 Link Purpose (Link Only)',
+                'Success Criterion 2.4.10 Section Headings',
+                'Success Criterion 2.5.1 Pointer Gestures',
+                'Success Criterion 2.5.2 Pointer Cancellation',
+                'Success Criterion 2.5.3 Label in Name',
+                'Success Criterion 2.5.4 Motion Actuation',
+                'Success Criterion 2.5.5 Target Size',
+                'Success Criterion 2.5.6 Concurrent Input Mechanisms',    
+                'Success Criterion 3.1.1 Language of Page',
+                'Success Criterion 3.1.2 Language of Parts',
+                'Success Criterion 3.1.3 Unusual Words',
+                'Success Criterion 3.1.4 Abbreviations',
+                'Success Criterion 3.1.5 Reading Level',
+                'Success Criterion 3.1.6 Pronunciation',
+                'Success Criterion 3.2.1 On Focus',
+                'Success Criterion 3.2.2 On Input',
+                'Success Criterion 3.2.3 Consistent Navigation',
+                'Success Criterion 3.2.4 Consistent Identification',
+                'Success Criterion 3.2.5 Change on Request',
+                'Success Criterion 3.3.1 Error Identification',
+                'Success Criterion 3.3.2 Labels or Instructions',
+                'Success Criterion 3.3.3 Error Suggestion',
+                'Success Criterion 3.3.4 Error Prevention (Legal, Financial, Data)',
+                'Success Criterion 3.3.5 Help',
+                'Success Criterion 3.3.6 Error Prevention (All)',
+                'Success Criterion 4.1.1 Parsing',
+                'Success Criterion 4.1.2 Name, Role, Value',
+                'Success Criterion 4.1.3 Status Messages'
+        ]
+
+var selectedPerceivable = [];
+var display_subject = "";
+var display_sc = "";
+let right_ans_count = 0;
+let wrong_ans_count = 0;
+
+let missed_sc = "";
+
+document.getElementById("input_div").style.display = "none";
+document.getElementById("result").style.display = "none";
+document.getElementById("missed_sc").style.display = "none";
+
+let dynamic_array;
+
+
+function selectUniqueSubject() {
+
+    var getSelectedValue = document.getElementById("guideline").value;
+    console.log(getSelectedValue);
+
+    // var getSelectedValue = document.querySelector(   
+    //             'input[name="wcag_principle"]:checked');   
+                
+             if(getSelectedValue != null) {   
+                
+
+                 if(getSelectedValue == "Text_alternative"){
+                      dynamic_array = Text_alternative;
+                 }else if(getSelectedValue == "Time_based_Media"){
+                      dynamic_array = Time_based_Media;
+                 }else if(getSelectedValue == "Adaptable"){
+                      dynamic_array = Adaptable;
+                 }else if(getSelectedValue == "Distinguishable"){
+                      dynamic_array = Distinguishable;
+                 }else if(getSelectedValue == "Keyboard_Accessible"){
+                      dynamic_array = Keyboard_Accessible;
+                 }else if(getSelectedValue == "Enough_Time"){
+                      dynamic_array = Enough_Time;
+                 }else if(getSelectedValue == "Seizures"){
+                      dynamic_array = Seizures;
+                 }else if(getSelectedValue == "Navigable"){
+                      dynamic_array = Navigable;
+                 }else if(getSelectedValue == "Input_Modalities"){
+                      dynamic_array = Input_Modalities;
+                 }else if(getSelectedValue == "Readable"){
+                      dynamic_array = Readable;
+                 }else if(getSelectedValue == "Predictable"){
+                      dynamic_array = Predictable;
+                 }else if(getSelectedValue == "Input_Assistance"){
+                      dynamic_array = Input_Assistance;
+                 }else if(getSelectedValue == "Compatible"){
+                      dynamic_array = Compatible;
+                 }else if(getSelectedValue == "All"){
+                      dynamic_array = All;
+                 }else{
+                     console.log("Something went wrong");
+                 }
+
+                //console.log("selected array "+dynamic_array)
+
+
+
+
+            
+                    document.getElementById("rg_button").innerHTML = "Random Success Criteria";
+                    document.getElementById("input_div").style.display = "block";
+                    document.getElementById("result").style.display = "flex";
+                    document.getElementById("ans_input").value = "";
+
+                    document.getElementById("submit_btn").disabled = false;
+                    
+                    document.getElementById("ans_input").focus();
+
+                    document.getElementById("demo2").innerHTML = "";
+                    document.getElementById("demo3").innerHTML = "";
+
+                  if (dynamic_array.length > 0) {
+                    var randomIndex = Math.floor(Math.random() * dynamic_array.length);
+                    var randomSubject = dynamic_array.splice(randomIndex, 1)[0];
+                    selectedPerceivable.push(randomSubject);
+                    display_subject = randomSubject.substring(24, 100);
+                   // console.log(display_subject);
+                    display_sc = randomSubject.substring(0, 24)
+                    document.getElementById("demo1").innerHTML =  display_sc;
+                  } else {
+                    document.getElementById("demo1").innerHTML = "No more Success Criteria available";
+                    document.querySelector(".child_div").style.display = "none";
+                    document.getElementById("missed_sc").style.display = "block";
+                  }
+
+
+            }   
+            else {   
+                console.log("no selected value");
+            }   
+
+
+
+
+
+
+}
+
+const checkAwnser = () => {
+  var ans_input = document.getElementById("ans_input").value;
+
+if(!ans_input){
+	alert("Please enter Success Criteria Name")
+}else{
+	  if(ans_input.toLowerCase().trim() === display_subject.toLowerCase().trim()){
+	  	right_ans_count++;
+	  	document.getElementById("right_ans").innerHTML = "Right "+right_ans_count;
+	  	Swal.fire({
+  icon: 'success',
+  title: 'Nice... You entered right answer',
+})
+	document.getElementById("demo3").innerHTML = "<i class='fa-regular fa-circle-check' aria-hidden='true'></i> You entered correct awnser";  
+	document.getElementById("demo2").innerHTML = "";	
+    document.getElementById("submit_btn").disabled = true;
+  }else{
+  	missed_sc += "<li>"+display_sc + " - "+display_subject+"</li>";
+  	console.log(missed_sc);
+  	wrong_ans_count++;
+  	document.getElementById("wrong_ans").innerHTML = "Wrong "+wrong_ans_count;
+  	Swal.fire({
+  icon: 'error',
+  title: 'Correct awnser is :- '+display_subject,
+})
+    document.getElementById("submit_btn").disabled = true;
+  	document.getElementById("demo2").innerHTML = " <i class='fa-regular fa-circle-xmark' aria-hidden='true'></i> You entered awnser is :- "+ans_input;
+  	document.getElementById("demo3").innerHTML = "<i class='fa-regular fa-circle-check' aria-hidden='true'></i> Correct awnser is :- "+display_subject;
+  }	
+}
+
+}
+
+
+console.log(missed_sc)
+document.getElementById("list_missed_sc").innerHTML = missed_sc;
+
+
+
+function displayMissedSC(){
+    
+    document.getElementById("list_missed_sc").innerHTML = missed_sc;
+}
+
+
+  </script>
+</body>
+</html>
+
